@@ -104,6 +104,7 @@ globals
   breed [larvae larva]
 
 
+
 plants-own
 [
   A_ZOI_above        ;; area of above-ground ZOI
@@ -151,7 +152,7 @@ larvae-own
    host              ;; number of the host plant (integer): from 0 to max(plants)
    biomass-larva     ;; biomass in mg (float)
    dispersal_radius  ;; distance which larva can walk to find a new plant
-   last-movement-tick;; when did larvae last switch plants?
+   last-movement-tick;; when did larva last switch plants?
    distance-path     ;; distance of path to next host-plant
    VISITED           ;; list with numbers of plants visited
    plants-visited    ;; how many plants have been visited (same plant can be counted twice)
@@ -163,7 +164,53 @@ patches-own
   nb-compete-below    ;; below-ground sharing of competition
 ]
 
+;;;;;;;;;;;;;;;;;;;;   set-default-values   ;;;;;;;;;;;;;;;
+;;;;;;;    set all parameters to default values     ;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+to all-values-default
 
+  ;; alle behaviour space sachen
+  set display-below-ground false
+  set above-competition "complete asymmetry"
+  set below-competition "allometric symmetry"
+  set level-GA 1
+  set defense-tolerance 0.24
+  set movement-modus 1
+  set death-threshold 10000
+  set density 400
+  set resource-limitation-below 0.45
+  set resource-limitation-above 0.15
+  set intrinsic-growth-rate 0.8
+  set priming false
+  set priming-radius 0.5
+  set conversion-factor 0.19
+  set death_coeff 0.25
+  set switch? true
+  set number_larvae 300
+  set defense_fraction_all 0.3
+  set dispersal_radius_larvae 0.7
+  set larva-waves 1
+  set simulength 160
+  set initial_defense_level 0
+
+  ask plants
+  [
+    set defense-fraction 0.3
+    set intrinsic-growth-rate 0.8
+    set B random-normal 30000 3000 ; [mg]
+    set B-above B / 2
+    set B-below B / 2
+    set primed 0
+    set defense-level  0
+  ]
+
+  ask larvae
+  [
+    set dispersal_radius 0.7
+  ]
+
+
+end
 
 ;;;;;;;;;;;;;;;;;;;;;  plant-setting  ;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;         initialisation of plants            ;;;;;;;
@@ -1869,10 +1916,10 @@ ticks
 30.0
 
 BUTTON
-300
-455
-380
-500
+295
+430
+375
+475
 NIL
 go
 T
@@ -1886,10 +1933,10 @@ NIL
 1
 
 BUTTON
-300
-405
+295
 380
-450
+375
+425
 NIL
 setup
 NIL
@@ -1939,10 +1986,10 @@ PENS
 "all" 1.0 0 -13791810 true "" ""
 
 BUTTON
-300
-505
-380
-550
+295
+480
+375
+525
 go-once
 go
 NIL
@@ -2040,7 +2087,7 @@ CHOOSER
 below-competition
 below-competition
 "off" "complete symmetry" "allometric symmetry" "size symmetry" "allometric asymmetry" "complete asymmetry"
-1
+2
 
 PLOT
 710
@@ -2087,7 +2134,7 @@ resource-limitation-below
 resource-limitation-below
 0
 0.99
-0.35
+0.45
 0.05
 1
 NIL
@@ -2146,7 +2193,7 @@ INPUTBOX
 390
 72
 randomseed
-98.0
+0.0
 1
 0
 Number
@@ -2160,7 +2207,7 @@ tau-median
 tau-median
 0
 200
-30.0
+0.0
 1
 1
 NIL
@@ -2175,7 +2222,7 @@ tau-range
 tau-range
 0
 48
-37.0
+0.0
 1
 1
 NIL
@@ -2258,7 +2305,7 @@ CHOOSER
 larva-waves
 larva-waves
 1 2 "continuous"
-2
+0
 
 CHOOSER
 300
@@ -2268,7 +2315,7 @@ CHOOSER
 wave-delay
 wave-delay
 6 12 18 24 30 36 42 48 54 60 66 72 78 84 90 96 102 108 114 120
-5
+0
 
 SLIDER
 209
@@ -2294,7 +2341,7 @@ number_larvae
 number_larvae
 0
 1000
-297.0
+300.0
 1
 1
 NIL
@@ -2309,7 +2356,7 @@ conversion-factor
 conversion-factor
 0
 1
-0.18
+0.19
 0.01
 1
 NIL
@@ -2424,7 +2471,7 @@ wave-larvae
 wave-larvae
 0
 400
-0.0
+304.0
 1
 1
 NIL
@@ -2504,7 +2551,7 @@ plant-number
 plant-number
 0
 400
-97.0
+0.0
 1
 1
 NIL
@@ -2673,7 +2720,7 @@ tau1
 tau1
 0
 100
-70.0
+0.0
 1
 1
 NIL
@@ -2703,7 +2750,7 @@ frequency
 frequency
 0
 100
-100.0
+0.0
 1
 1
 NIL
@@ -2725,7 +2772,7 @@ INPUTBOX
 1065
 70
 simulength
-420.0
+160.0
 1
 0
 Number
@@ -2737,7 +2784,7 @@ SWITCH
 363
 priming
 priming
-0
+1
 1
 -1000
 
@@ -2750,11 +2797,28 @@ priming-radius
 priming-radius
 0
 1
-0.25
+0.5
 0.05
 1
 NIL
 HORIZONTAL
+
+BUTTON
+295
+530
+375
+580
+DEFAULT
+all-values-default
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## COPYRIGHT AND LICENSE AND WHATEVER...
